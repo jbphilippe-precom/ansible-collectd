@@ -1,0 +1,17 @@
+---
+# Install collectd plugin for nginx
+
+- name: Upload plugin nginx
+  template: src=plugin_nginx.conf.j2 dest=/etc/collectd.d/nginx.conf owner=root group=root mode=0644
+  notify: Restart collectd
+
+- name: Upload nginx server
+  template: src=nginx_server.conf.j2 dest=/etc/nginx/sites-available/collectd owner=root group=root mode=0644
+  notify:
+    - Reload nginx
+    - Restart collectd
+
+- name: Create symlink to collectd
+  file: src=/etc/nginx/sites-available/collectd dest=/etc/nginx/sites-enabled/collectd state=link
+  notify:
+    - Reload nginx

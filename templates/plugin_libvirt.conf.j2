@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+
+LoadPlugin libvirt
+
+<Plugin "libvirt">
+    Connection "{% if ansible_virtualization_type == "xen" %}r'xen:///'{% else %}r'qemu:///system'{% endif %}"
+    RefreshInterval 60
+    #Domain "name"
+    #BlockDevice "name:device"
+    #InterfaceDevice "name:interface"
+    #IgnoreSelected false
+    HostnameFormat "hostname name"
+</Plugin>
+ # Commentaire en fin de fichier ne pas toucher SVP...

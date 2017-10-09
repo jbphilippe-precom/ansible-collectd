@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+<LoadPlugin "python">
+    Globals true
+</LoadPlugin>
+<Plugin "python">
+    ModulePath "/usr/lib/collectd/"
+    Import "elasticsearch"
+    <Module "elasticsearch">
+        Verbose false
+        Cluster "{{ es_cluster_name }}"
+        Indexes ["_all"]
+        EnableIndexStats true
+        IndexStatsMasterOnly true
+        EnableClusterHealth true
+        Interval 10
+        IndexInterval 300
+        DetailedMetrics true
+        ThreadPools ["generic","search","index"]
+        AdditionalMetrics [""]
+    </Module>
+</Plugin>
+# Commentaire en fin de fichier ne pas toucher SVP...

@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+
+LoadPlugin postgresql
+
+<Plugin postgresql>
+
+{% for db in collectd_postgresql_dblist %}
+  <Database "{{ db }}">
+    Host "localhost"
+    Port "{{ collectd_postgresql_port }}"
+    User "{{ collectd_postgresql_monitoring_user }}"
+    Password "{{ collectd_postgresql_monitoring_password }}"
+    Query backends
+    Query transactions
+    Query queries
+    Query query_plans
+    Query table_states
+    Query disk_io
+    Query disk_usage
+  </Database>
+
+{% endfor %}
+
+</Plugin>

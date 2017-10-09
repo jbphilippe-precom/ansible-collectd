@@ -1,0 +1,26 @@
+# {{ ansible_managed }}
+
+<LoadPlugin python>
+    Globals true
+</LoadPlugin>
+
+<Plugin python>
+    # haproxy.py is at /usr/lib/collectd/haproxy.py
+    ModulePath "/usr/lib/collectd"
+
+    Import "haproxy"
+
+    <Module haproxy>
+      Socket "{{ collectd_haproxy_socket }}"
+{% if collectd_haproxy_ignore[0] != "" %}
+{% for ignore in collectd_haproxy_ignore %}
+      ProxyIgnore "{{ ignore }}"
+{% endfor %}
+{% endif %}
+{% if collectd_haproxy_monitor[0] != "" %}
+{% for monitor in collectd_haproxy_monitor %}
+      ProxyMonitor "{{ monitor }}"
+{% endfor %}
+{% endif %}
+    </Module>
+</Plugin>

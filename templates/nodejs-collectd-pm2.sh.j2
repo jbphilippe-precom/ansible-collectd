@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export HOME={{ nodejs_user_home }}
+
+IS_PM2_RUNNING=`ps -u node | grep "PM2" > /dev/null 2>&1; echo $?`
+
+if [ $IS_PM2_RUNNING -eq 0 ]
+then
+  node /usr/local/bin/nodejs-collectd-pm2.js
+fi

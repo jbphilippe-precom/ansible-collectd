@@ -1,0 +1,11 @@
+---
+# tasks file for ansible-collectd
+
+- include: collectd_install.yml
+  when: ansible_distribution == 'Ubuntu'
+  tags: [installation]
+
+- name: Install Collectd Plugins
+  include: collectd_install_plugin.yml
+  when: ansible_distribution == 'Ubuntu' and collectd_install_plugins_list is defined
+  tags: [installation, add-plugins]

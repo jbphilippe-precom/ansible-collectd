@@ -1,0 +1,86 @@
+# {{ ansible_managed }}
+
+LoadPlugin "match_regex"
+LoadPlugin "match_empty_counter"
+LoadPlugin "target_replace"
+
+<Chain "PreCache">
+
+  <Rule "ignore_cassandra_system">
+    <Match "regex">
+      Plugin "^GenericJMX$"
+      PluginInstance "cassandra_columnfamilies_stats-system*"
+    </Match>
+    Target "stop"
+  </Rule>
+
+  <Rule "ignore_cpu">
+    <Match "regex">
+      Plugin "cpu"
+      TypeInstance "interrupt|softirq|nice|steal"
+    </Match>
+    Target "stop"
+  </Rule>
+
+  <Rule "ignore_virtual_interfaces">
+    <Match "regex">
+      Host "^vmhost|^xljm"
+      Plugin "interface"
+      TypeInstance "^br*|^vnet*|^peth*|^veth*|^vif*"
+    </Match>
+    Target "stop"
+  </Rule>
+
+  <Rule "ignore_interface_if_packet">
+    <Match "regex">
+      Plugin "interface"
+      Type "^if_packets"
+    </Match>
+    Target "stop"
+  </Rule>
+
+  <Rule "ignore_interface_empty_errors">
+    <Match "regex">
+      Plugin "interface"
+      Type "^if_errors"
+    </Match>
+    Match "empty_counter"
+    Target "stop"
+  </Rule>
+
+  <Rule "ignore_mysql_show_commands">
+    <Match "regex">
+      Plugin "mysql"
+      Type "mysql_commands"
+      TypeInstance "^show"
+    </Match>
+    Target "stop"
+  </Rule>
+
+  <Rule "ignore_nfsv2">
+    <Match "regex">
+      Plugin "nfs"
+      PluginInstance "^v2client"
+    </Match>
+    Target "stop"
+  </Rule>
+
+  <Rule "strip_space">
+    <Match "regex">
+       Plugin "^GenericJMX$"
+    </Match>
+    <Target "replace">
+      PluginInstance "\"" ""
+      PluginInstance "\"" ""
+      PluginInstance "\"" ""
+      PluginInstance "\"" ""
+      PluginInstance " " "_"
+      PluginInstance " " "_"
+      PluginInstance " " "_"
+      PluginInstance " " "_"
+    </Target>
+    <Target "write">
+      Plugin "network"
+    </Target>
+  </Rule>
+</Chain>

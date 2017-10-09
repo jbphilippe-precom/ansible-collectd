@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+
+LoadPlugin ntpd
+
+<Plugin "ntpd">
+  Host "localhost"
+  Port "123"
+  ReverseLookups false
+</Plugin>

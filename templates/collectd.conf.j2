@@ -1,0 +1,88 @@
+# {{ ansible_managed }}
+
+#
+# Config file for collectd(1).
+# Please read collectd.conf(5) for a list of options.
+# http://collectd.org/
+#
+
+Hostname    "{{ ansible_hostname }}"
+FQDNLookup   false
+BaseDir     "/var/lib/collectd"
+PIDFile     "/var/run/collectd.pid"
+PluginDir   "/usr/lib/collectd"
+TypesDB     "/usr/share/collectd/types.db"
+Interval     {{ collectd_interval }}
+ReadThreads  5
+
+
+LoadPlugin cpu
+LoadPlugin df
+LoadPlugin disk
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin network
+LoadPlugin processes
+LoadPlugin python
+LoadPlugin swap
+#LoadPlugin unixsock
+
+<Plugin "df">
+  MountPoint "/boot"
+  MountPoint "/home"
+  MountPoint "/root"
+  MountPoint "/usr"
+
+  FSType "tmpfs"
+  FSType "sysfs"
+  FSType "proc"
+  FSType "usbfs"
+  FSType "hugetlbfs"
+  FSType "devpts"
+
+  IgnoreSelected true
+</Plugin>
+
+<Plugin disk>
+  Disk "/^(xv|[vhs])d[a-f]?$/"
+  IgnoreSelected false
+</Plugin>
+
+<Plugin "interface">
+  Interface "lo"
+  Interface "sit0"
+  Interface "/^veth.*/"
+  Interface "/^vx.*/"
+  Interface "/^ov.*/"
+  IgnoreSelected true
+</Plugin>
+
+
+#<Plugin unixsock>
+#  SocketFile "/var/run/collectd-unixsock"
+#  SocketGroup "icinga"
+#  SocketPerms "0660"
+#</Plugin>
+
+{% if collectd_server %}
+<Plugin network>
+{% for i in collectd_list_host_receives_data %}
+  Server "{{ i }}" "{{ collectd_port }}"
+{% endfor %}
+  Listen "{{ collectd_listen_bind }}" "{{ collectd_listen_port }}"
+#  TimeToLive "128"
+  Forward {{ collectd_forward }}
+#  CacheFlush 1800
+</Plugin>
+{% else %}
+<Plugin network>
+  Server "{{ collectd_host_receives_data }}" "{{ collectd_port }}"
+#  TimeToLive "128"
+#  Forward false
+#  CacheFlush 1800
+</Plugin>
+{% endif %}
+
+
+Include "/etc/collectd.d/*.conf"

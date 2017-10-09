@@ -1,0 +1,20 @@
+---
+- name: Upload zookeeper python plugin for collectd
+  copy:
+    src=zk-collectd.py
+    dest=/usr/lib/collectd/zk-collectd.py
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - Restart collectd
+
+- name: Upload Config collectd for zookeeper
+  template:
+    src=plugin_zookeeper.conf.j2
+    dest=/etc/collectd.d/zookeeper.conf
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - Restart collectd

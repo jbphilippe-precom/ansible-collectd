@@ -1,0 +1,13 @@
+---
+# Install collectd plugin for Node.js
+
+- name: Copy js file to collect Node.js metrics
+  copy: src=nodejs-collectd-pm2.js dest=/usr/local/bin/nodejs-collectd-pm2.js owner=root group=root mode=0644
+
+- name: Copy bash file to collect Node.js metrics
+  template: src=nodejs-collectd-pm2.sh.j2 dest=/usr/local/bin/nodejs-collectd-pm2.sh owner=root group=root mode=0755
+
+- name: Upload plugin Node.js
+  template: src=plugin_nodejs.conf.j2 dest=/etc/collectd.d/nodejs.conf owner=root group=root mode=0644
+  notify:
+    - Restart collectd

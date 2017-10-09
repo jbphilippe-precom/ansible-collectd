@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+
+LoadPlugin mysql
+
+<Plugin mysql>
+{% for db in collectd_mysql_dblist %}
+  <Database "{{ db }}">
+        Host "localhost"
+        User "{{ collectd_mysql_monitoring_user }}"
+        Password "{{ collectd_mysql_monitoring_password }}"
+  </Database>
+{% endfor %}
+</Plugin>
+# Commentaire en fin de fichier ne pas toucher SVP...

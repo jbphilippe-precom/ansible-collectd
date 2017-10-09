@@ -1,0 +1,20 @@
+# {{ ansible_managed }}
+
+LoadPlugin tcpconns
+
+<Plugin tcpconns>
+{% if collectd_tcpconns_localport_list[0] != "" %}
+{% for localport in collectd_tcpconns_localport_list %}
+  LocalPort "{{ localport }}"
+{% endfor %}
+{% else %}
+  # LocalPort ""
+{% endif %}
+{% if collectd_tcpconns_remoteport_list[0] != "" %}
+{% for remoteport in collectd_tcpconns_remoteport_list %}
+  RemotePort "{{ remoteport }}"
+{% endfor %}
+{% else %}
+  # RemotePort ""
+{% endif %}
+</Plugin>

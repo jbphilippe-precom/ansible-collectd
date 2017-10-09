@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+
+<VirtualHost localhost:80>
+        RewriteEngine on
+        RewriteRule ^/server-status$ /server-status$1 [L]
+        RewriteRule ^/(.*) http://www.pagesjaunes.fr/ [R=301,L]
+        <Location /server-status>
+            SetHandler server-status
+            Order deny,allow
+            Deny from all
+            Allow from 127.0.0.1
+        </Location>
+</VirtualHost>

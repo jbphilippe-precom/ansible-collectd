@@ -1,0 +1,30 @@
+---
+# Install collectd plugin for apache
+
+- name: Upload plugin Apache
+  template: src=plugin_apache.conf.j2 dest=/etc/collectd.d/apache.conf owner=root group=root mode=0644
+  notify: Restart collectd
+
+- name: Upload apache server config
+  template: src=apache_server.conf.j2 dest=/etc/apache2/sites-available/collectd.conf owner=root group=root mode=0644
+  register: upload_latest_change
+  notify:
+    - Reload apache
+
+- name: Activation ExtendedStatus
+  lineinfile:
+    dest: /etc/apache2/mods-enabled/status.conf
+    regexp: "^[#]?ExtendedStatus .*"
+    line: "ExtendedStatus On"
+  when: upload_latest_change|changed
+
+- name: Activation de la config | P1
+  command: "a2ensite collectd.conf"
+  when: upload_latest_change|changed
+
+- name: Activation de la config | P2
+  command: "a2enmod rewrite"
+  notify:
+    - Reload apache
+    - Restart collectd
+  when: upload_latest_change|changed

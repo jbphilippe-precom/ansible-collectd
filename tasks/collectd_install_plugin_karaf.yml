@@ -1,0 +1,30 @@
+---
+
+- name: Find path to libjvm.so
+  find:
+    path="/usr/lib"
+    patterns="libjvm.so"
+    recurse=yes
+  register: path_libjvm
+
+- name: Adding LD_LIBRARY_PATH to /etc/default/collectd
+  lineinfile:
+    dest=/etc/default/collectd
+    line="LD_LIBRARY_PATH=$LD_LIBRARY_PATH:{{ path_libjvm.files[0].path.replace("libjvm.so", "") }}"
+  when: ansible_distribution_release == 'xenial'
+
+- name: Adding LD_LIBRARY_PATH to /etc/default/collectd
+  lineinfile:
+    dest=/etc/default/collectd
+    line="export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:{{ path_libjvm.files[0].path.replace("libjvm.so", "") }}"
+  when: ansible_distribution_release == 'trusty'
+
+- name: Upload Config collectd for karaf
+  template:
+    src=plugin_karaf.conf.j2
+    dest=/etc/collectd.d/karaf.conf
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - Restart collectd

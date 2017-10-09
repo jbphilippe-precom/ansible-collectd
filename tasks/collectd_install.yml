@@ -1,0 +1,10 @@
+---
+# tasks install for ansible-collectd
+
+- name: Collectd Install
+  apt:
+    name: collectd-core
+    update_cache: yes
+    state: latest
+
+- include: collectd_config.yml

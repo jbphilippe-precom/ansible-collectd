@@ -1,0 +1,20 @@
+---
+- name: Upload haproxy python plugin for collectd
+  template:
+    src=haproxy_module.py.j2
+    dest=/usr/lib/collectd/haproxy.py
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - Restart collectd
+
+- name: Upload Config collectd for haproxy
+  template:
+    src=plugin_haproxy.conf.j2
+    dest=/etc/collectd.d/haproxy.conf
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - Restart collectd

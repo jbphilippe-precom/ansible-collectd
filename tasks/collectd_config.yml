@@ -1,0 +1,14 @@
+---
+# tasks config for ansible-collectd
+
+- name: Put config file collectd.conf
+  template: src=collectd.conf.j2 dest=/etc/collectd/collectd.conf owner=root group=root mode=0644
+  notify: Restart collectd
+
+- name: Create directory collectd.d
+  file: path=/etc/collectd.d state=directory owner=root group=root mode=0644
+  notify: Restart collectd
+
+- name: Put config file filters.conf
+  template: src=filters.conf.j2 dest=/etc/collectd.d/filters.conf owner=root group=root mode=0644
+  notify: Restart collectd

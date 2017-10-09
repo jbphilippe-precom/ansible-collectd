@@ -1,0 +1,7 @@
+---
+# Install collectd plugin for tcpconns
+
+- name: Upload plugin tcpconns
+  template: src=plugin_tcpconns.conf.j2 dest=/etc/collectd.d/tcpconns.conf owner=root group=root mode=0644
+  notify:
+    - Restart collectd

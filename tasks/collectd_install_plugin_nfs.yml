@@ -1,0 +1,7 @@
+---
+# Install collectd plugin for nfs
+
+- name: Upload plugin nfs
+  template: src=plugin_nfs.conf.j2 dest=/etc/collectd.d/nfs.conf owner=root group=root mode=0644
+  notify:
+    - Restart collectd

@@ -1,0 +1,23 @@
+---
+# Install collectd plugin for mysql
+
+- name: Install plugin mysql
+  template: src=plugin_mysql.conf.j2 dest=/etc/collectd.d/mysql.conf owner=root group=root mode=0644
+  notify: Restart collectd
+
+- name: Install requirements
+  apt:
+    name: python-mysqldb
+    update_cache: yes
+    state: latest
+
+- name: Create monitoring user for mysql
+  mysql_user:
+    host: localhost
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: "{{ collectd_mysql_monitoring_user }}"
+    password: "{{ collectd_mysql_monitoring_password }}"
+    priv: "*.*:USAGE,SELECT"
+    state: present
+  notify: Restart collectd

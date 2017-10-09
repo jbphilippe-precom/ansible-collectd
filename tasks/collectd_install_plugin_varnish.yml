@@ -1,0 +1,7 @@
+---
+# Install collectd plugin for Varnish
+
+- name: Upload plugin varnish
+  template: src=plugin_varnish.conf.j2 dest=/etc/collectd.d/varnish.conf owner=root group=root mode=0644
+  notify:
+    - Restart collectd

@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+
+LoadPlugin exec
+
+<Plugin exec>
+  Exec "{{ nodejs_user }}:{{ nodejs_group }}" "/usr/local/bin/nodejs-collectd-pm2.sh"
+</Plugin>

@@ -1,0 +1,74 @@
+---
+# defaults file for ansible-collectd
+
+# Collectd
+collectd_service_name: collectd
+collectd_conf_path: /etc/collectd
+collectd_host_receives_data: metro02g.bserv1.local
+collectd_port: 25826
+collectd_interval: 60
+# Collectd server
+collectd_server: False
+collectd_list_host_receives_data:
+  - ""
+collectd_listen_bind: 0.0.0.0
+collectd_listen_port: 25826
+collectd_forward: true
+
+# Postgres plugin
+collectd_postgresql_monitoring_user: collectd
+collectd_postgresql_port: 5432
+collectd_postgresql_dblist:
+  - ""
+
+# MongoDB plugin
+collectd_mongodb_monitoring_user: collectd
+mongodb_port: 27017
+
+# Mysql plugin
+collectd_mysql_monitoring_user: collectd
+collectd_mysql_dblist:
+  - ""
+
+# Redis plugin
+collectd_redis_auth: ""
+collectd_redis_portlist:
+  - ""
+
+## ElasticSearch ##
+es_cluster_name: "elasticsearch"
+es_http_port: 9200
+es_host_name: localhost
+
+# Node.js plugin
+nodejs_user_home: "/opt/node"
+nodejs_user: "node"
+nodejs_group: "node"
+
+# Tcpconns plugin
+collectd_tcpconns_localport_list:
+  - ""
+collectd_tcpconns_remoteport_list:
+  - ""
+
+# Haproxy
+collectd_haproxy_monitor:
+  - ""
+collectd_haproxy_ignore:
+  - ""
+collectd_haproxy_python_path: "/usr/lib/python2.7"
+collectd_haproxy_socket: "/var/run/haproxy/admin.sock"
+
+# Zookeeper
+kafka_zookeeper_bind_port: "2181"
+collectd_zookeeper_instance_name: "prod"
+
+# kafka
+kafka_jmx_port: 9997
+
+# Karaf
+karaf_jmx_user: "jmxuser"
+
+# ActiveMQ
+activemq_jmx_port: "11099"
+activemq_jmx_user: "jmx_user"

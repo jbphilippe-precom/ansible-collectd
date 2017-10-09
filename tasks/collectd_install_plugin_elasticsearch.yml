@@ -1,0 +1,20 @@
+---
+- name: Upload elasticsearch python plugin for collectd
+  template:
+    src=plugin_python_elasticsearch.j2
+    dest=/usr/lib/collectd/elasticsearch.py
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - Restart collectd
+
+- name: Upload Config collectd for elasticsearch
+  template:
+    src=plugin_elasticsearch.conf.j2
+    dest=/etc/collectd.d/elasticsearch.conf
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - Restart collectd

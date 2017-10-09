@@ -1,0 +1,13 @@
+---
+# Install collectd plugin for Redis
+
+- name: Upload plugin redis
+  template: src=plugin_redis.conf.j2 dest=/etc/collectd.d/redis.conf owner=root group=root mode=0644
+  notify:
+    - Restart collectd
+
+
+- name: Upload plugin python redis 
+  template: src=redis_info.py dest=/var/lib/collectd/redis_info.py owner=root group=root mode=0644
+  notify:
+    - Restart collectd

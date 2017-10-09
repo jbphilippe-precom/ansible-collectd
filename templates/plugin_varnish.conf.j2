@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+LoadPlugin varnish
+
+<Plugin "varnish">
+  <Instance>
+    CollectCache       true
+    CollectConnections true
+    CollectBackend     true
+    CollectSHM         true
+    CollectESI         false
+    CollectFetch       false
+    CollectHCB         false
+    CollectSMA         false
+    CollectSMS         false
+    CollectSM          false
+    CollectTotals      true
+    CollectWorkers     true
+  </Instance>
+</Plugin> 
+# Do not remove this line because of use by collectd-core daemon to know the end of file

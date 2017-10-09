@@ -1,0 +1,7 @@
+---
+# Install collectd plugin for libvirt
+
+- name: Upload plugin libvirt
+  template: src=plugin_libvirt.conf.j2 dest=/etc/collectd.d/libvirt.conf owner=root group=root mode=0644
+  notify:
+    - Restart collectd

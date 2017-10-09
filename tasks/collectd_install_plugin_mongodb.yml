@@ -1,0 +1,67 @@
+---
+# Install collectd plugin for MongoDB
+
+- name: Create monitoring user for MongoDB
+  mongodb_user:
+    database: admin
+    name: "{{ collectd_mongodb_monitoring_user }}"
+    password: "{{ collectd_mongodb_monitoring_password }}"
+    roles: 'readAnyDatabase,clusterMonitor'
+    state: present
+    login_database: admin
+    login_host: localhost
+    login_port: "{{ mongodb_port }}"
+    login_user: admin
+    login_password: "{{ mongodb_admin_password }}"
+  when: mongodb_cluster_name is undefined and ansible_local.mongodb_monitoring_user.monitoring.created is undefined
+  register: mongodb_monitoring_user
+
+- name: Create monitoring user for MongoDB in a replica set
+  mongodb_user:
+    database: admin
+    name: "{{ collectd_mongodb_monitoring_user }}"
+    password: "{{ collectd_mongodb_monitoring_password }}"
+    roles: 'readAnyDatabase,clusterMonitor'
+    state: present
+    login_database: admin
+    login_host: localhost
+    login_port: "{{ mongodb_port }}"
+    login_user: admin
+    login_password: "{{ mongodb_admin_password }}"
+    replica_set: "{{ mongodb_cluster_name }}"
+  when: mongodb_cluster_name is defined and ansible_local.mongodb_monitoring_user.monitoring.created is undefined
+  register: mongodb_monitoring_user
+
+- name: Create facts dir
+  file: path=/etc/ansible/facts.d/ state=directory owner=root group=root mode=0755
+
+- name: Create monitoring users fact
+  copy: src=mongodb_monitoring_user.fact dest=/etc/ansible/facts.d/mongodb_monitoring_user.fact owner=root group=root mode=0644
+  when: mongodb_monitoring_user|changed
+
+- name: Create dir mongodb
+  file: path=/usr/lib/collectd/mongodb state=directory owner=root group=root mode=0755
+
+- name: Copy MongoDB python plugin
+  copy: src=mongodb.py dest=/usr/lib/collectd/mongodb/mongodb.py owner=root group=root mode=0644
+
+- name: Install PyMongo
+  apt: name=python-pymongo state=latest
+
+- name: Install plugin MongoDB
+  template: src=plugin_mongodb.conf.j2 dest=/etc/collectd.d/mongodb.conf owner=root group=root mode=0600
+  notify: Restart collectd
+
+- name: Install types.db specific configuration for MongoDB
+  blockinfile:
+    dest: /usr/share/collectd/types.db
+    block: |
+      # MongoDB
+      cache_ratio                     value:GAUGE:0:100
+      connections                     value:COUNTER:0:U
+      counter                         value:COUNTER:U:U
+      file_size                       bytes:GAUGE:0:U
+      memory                          value:GAUGE:0:281474976710656
+      percent                         percent:GAUGE:0:100.1
+      total_operations                value:DERIVE:0:U
+  notify: Restart collectd

@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+
+LoadPlugin apache
+<Plugin apache>
+  <Instance "apache">
+    URL "http://localhost/server-status?auto"
+  </Instance>
+</Plugin>
+ # Commentaire en fin de fichier ne pas toucher SVP...

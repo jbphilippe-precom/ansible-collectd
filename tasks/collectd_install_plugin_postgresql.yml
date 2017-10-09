@@ -1,0 +1,22 @@
+---
+# Install collectd plugin for postgres
+
+- name: Install plugin postgres
+  template: src=plugin_postgresql.conf.j2 dest=/etc/collectd.d/postgresql.conf owner=root group=root mode=0644
+  notify: Restart collectd
+
+- name: Install python module required for postgresql
+  apt: name={{ item }} state=latest
+  with_items:
+    - libpq-dev
+    - python-psycopg2
+
+- name: Create monitoring user for postgresql
+  become_user: postgres
+  postgresql_user:
+    db: "{{ item }}"
+    name: "{{ collectd_postgresql_monitoring_user }}"
+    password: "{{ collectd_postgresql_monitoring_password }}"
+    priv: CONNECT
+  with_items: "{{ collectd_postgresql_dblist }}"
+  notify: Restart collectd

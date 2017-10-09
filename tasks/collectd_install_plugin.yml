@@ -1,0 +1,7 @@
+---
+# tasks file for install collectd Plugins
+
+- name: Install Collectd Plugins
+  include: collectd_install_plugin_{{ item }}.yml
+  with_items:
+    - "{{ collectd_install_plugins_list }}"

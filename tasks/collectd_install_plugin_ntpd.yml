@@ -1,0 +1,14 @@
+---
+# Install collectd plugin for NTPd
+
+- name: Upload plugin ntpd
+  template: src=plugin_ntpd.conf.j2 dest=/etc/collectd.d/ntpd.conf owner=root group=root mode=0644
+  notify:
+    - Restart collectd
+
+- name: Enable mode7 in ntpd
+  lineinfile:
+    path: /etc/ntp.conf
+    line: "enable mode7"
+  notify:
+    - Restart ntp
