@@ -37,7 +37,7 @@ import re
 VERBOSE_LOGGING = False
 
 CONFIGS = []
-REDIS_INFO = {}
+RED_INFO = {}
 
 def fetch_info( conf ):
     """Connect to Redis server and request info"""
@@ -141,8 +141,8 @@ def configure_callback(conf):
             instance = val
         elif searchObj:
             log_verbose('Matching expression found: key: %s - value: %s' % (searchObj.group(1), val))
-            global REDIS_INFO
-            REDIS_INFO[searchObj.group(1)] = val
+            global RED_INFO
+            RED_INFO[searchObj.group(1)] = val
         else:
             collectd.warning('redis_info plugin: Unknown config key: %s.' % key )
             continue
@@ -193,7 +193,7 @@ def get_metrics( conf ):
     if plugin_instance is None:
         plugin_instance = '{host}:{port}'.format(host=conf['host'], port=conf['port'])
 
-    for key, val in REDIS_INFO.iteritems():
+    for key, val in RED_INFO.iteritems():
         #log_verbose('key: %s - value: %s' % (key, val))
         if key == 'total_connections_received':
             dispatch_value(info, 'total_connections_received', 'counter', plugin_instance, 'connections_received')
